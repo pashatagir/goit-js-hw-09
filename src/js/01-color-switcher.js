@@ -15,6 +15,7 @@ function onChangeColorBody() {
     return;
   }
   isActive = true;
+  refs.btnStart.setAttribute('disabled', true);
   timerId = setInterval(
     () => (refs.body.style.backgroundColor = getRandomHexColor()),
     1000

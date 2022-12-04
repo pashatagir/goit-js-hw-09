@@ -1,7 +1,6 @@
-// Описаний в документації
 import flatpickr from 'flatpickr';
-// Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
   btnStart: document.querySelector('[data-start]'),
@@ -25,7 +24,8 @@ const options = {
   parseDate: true,
   onClose: function (selectedDates) {
     if (selectedDates[0] <= new Date()) {
-      alert('Оберіь дату або час в майбутньому!');
+      // alert('Оберіь дату або час в майбутньому!');
+      Notify.failure('Choose a date or time in the future!');
       refs.btnStart.setAttribute('disabled', true);
     } else {
       refs.btnStart.removeAttribute('disabled');

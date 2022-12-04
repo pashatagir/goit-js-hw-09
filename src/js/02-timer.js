@@ -12,6 +12,11 @@ const refs = {
   timerSeconds: document.querySelector('[data-seconds]'),
 };
 
+const DELAY_INTERVAL = 1000;
+let intervalId = null;
+let selectedTimeInMs = null;
+let objectTime = {};
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -19,33 +24,25 @@ const options = {
   minuteIncrement: 1,
   parseDate: true,
   onClose: function (selectedDates) {
-    onInputDate(selectedDates[0]);
+    if (selectedDates[0] <= new Date()) {
+      alert('Оберіь дату або час в майбутньому!');
+      refs.btnStart.setAttribute('disabled', true);
+    } else {
+      refs.btnStart.removeAttribute('disabled');
+      selectedTimeInMs = Date.parse(selectedDates) - Date.now();
+      objectTime = convertMs(selectedTimeInMs);
+      // if we want to immediately see the date in the output
+      // refs.timerDays.textContent = addLeadingZero(objectTime.days);
+      // refs.timerHours.textContent = addLeadingZero(objectTime.hours);
+      // refs.timerMinutes.textContent = addLeadingZero(objectTime.minutes);
+      // refs.timerSeconds.textContent = addLeadingZero(objectTime.seconds);
+    }
   },
 };
 
 flatpickr(refs.input, options);
 
-const DELAY_INTERVAL = 1000;
-let intervalId = null;
-let selectedTimeInMs = null;
-let objectTime = {};
-
 refs.btnStart.addEventListener('click', onStartTimer);
-
-function onInputDate(selectedDates) {
-  if (selectedDates <= new Date()) {
-    alert('Оберіь дату або час в майбутньому!');
-    refs.btnStart.setAttribute('disabled', true);
-  } else {
-    refs.btnStart.removeAttribute('disabled');
-    selectedTimeInMs = Date.parse(selectedDates) - Date.now();
-    objectTime = convertMs(selectedTimeInMs);
-    refs.timerDays.textContent = addLeadingZero(objectTime.days);
-    refs.timerHours.textContent = addLeadingZero(objectTime.hours);
-    refs.timerMinutes.textContent = addLeadingZero(objectTime.minutes);
-    refs.timerSeconds.textContent = addLeadingZero(objectTime.seconds);
-  }
-}
 
 function onStartTimer(selectedDates) {
   refs.btnStart.setAttribute('disabled', true);

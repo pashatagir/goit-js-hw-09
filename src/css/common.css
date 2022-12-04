@@ -16,3 +16,18 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  display: flex;
+  text-align: center;
+  color: #212121;
+  border-radius: 2px;
+}
+
+.value {
+  margin-bottom: 15px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 80px;
+  margin-top: 0;
+  margin-bottom: 24px;
+}

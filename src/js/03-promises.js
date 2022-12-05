@@ -20,6 +20,9 @@ function onSubmit(e) {
       .catch(error => Notify.failure(error));
     delay += step;
   }
+  setTimeout(() => {
+    refs.formEl.reset();
+  }, delay);
 }
 
 function createPromise({ position, delay }) {

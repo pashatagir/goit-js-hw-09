@@ -23,7 +23,7 @@ function onChangeColorBody() {
 }
 
 function onStopChangeColorBody() {
-  refs.btnStart.setAttribute('disabled', false);
+  refs.btnStart.removeAttribute('disabled');
   clearInterval(timerId);
 }
 

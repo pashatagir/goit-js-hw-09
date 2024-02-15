@@ -25,6 +25,7 @@ function onChangeColorBody() {
 function onStopChangeColorBody() {
   refs.btnStart.removeAttribute('disabled');
   clearInterval(timerId);
+  isActive = false;
 }
 
 function getRandomHexColor() {

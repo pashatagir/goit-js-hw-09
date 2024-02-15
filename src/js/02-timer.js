@@ -4,17 +4,29 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
   btnStart: document.querySelector('[data-start]'),
+  btnReset: document.querySelector('[data-reset]'),
   input: document.querySelector('#datetime-picker'),
-  timerDays: document.querySelector('[data-days]'),
-  timerHours: document.querySelector('[data-hours]'),
-  timerMinutes: document.querySelector('[data-minutes]'),
-  timerSeconds: document.querySelector('[data-seconds]'),
+  outputDays: document.querySelector('[data-days]'),
+  outputHours: document.querySelector('[data-hours]'),
+  outputMinutes: document.querySelector('[data-minutes]'),
+  outputSeconds: document.querySelector('[data-seconds]'),
 };
 
 const DELAY_INTERVAL = 1000;
 let intervalId = null;
 let selectedTimeInMs = null;
 let objectTime = {};
+const initOutputTextContent = ({
+  days = '0',
+  hours = '0',
+  minutes = '0',
+  seconds = '0',
+}) => {
+  refs.outputDays.textContent = addLeadingZero(days);
+  refs.outputHours.textContent = addLeadingZero(hours);
+  refs.outputMinutes.textContent = addLeadingZero(minutes);
+  refs.outputSeconds.textContent = addLeadingZero(seconds);
+};
 
 const options = {
   enableTime: true,
@@ -32,19 +44,17 @@ const options = {
       selectedTimeInMs = Date.parse(selectedDates) - Date.now();
       objectTime = convertMs(selectedTimeInMs);
       // if we want to immediately see the date in the output
-      // refs.timerDays.textContent = addLeadingZero(objectTime.days);
-      // refs.timerHours.textContent = addLeadingZero(objectTime.hours);
-      // refs.timerMinutes.textContent = addLeadingZero(objectTime.minutes);
-      // refs.timerSeconds.textContent = addLeadingZero(objectTime.seconds);
+      initOutputTextContent(objectTime);
     }
   },
 };
 
 flatpickr(refs.input, options);
 
-refs.btnStart.addEventListener('click', onStartTimer);
+refs.btnStart.addEventListener('click', onClickBtnStart);
+refs.btnReset.addEventListener('click', onClickBtnReset);
 
-function onStartTimer(selectedDates) {
+function onClickBtnStart(selectedDates) {
   refs.btnStart.setAttribute('disabled', true);
   refs.input.setAttribute('disabled', true);
   intervalId = setInterval(() => {
@@ -55,10 +65,7 @@ function onStartTimer(selectedDates) {
       return;
     }
     objectTime = convertMs(selectedTimeInMs);
-    refs.timerDays.textContent = addLeadingZero(objectTime.days);
-    refs.timerHours.textContent = addLeadingZero(objectTime.hours);
-    refs.timerMinutes.textContent = addLeadingZero(objectTime.minutes);
-    refs.timerSeconds.textContent = addLeadingZero(objectTime.seconds);
+    initOutputTextContent(objectTime);
     selectedTimeInMs -= DELAY_INTERVAL;
   }, DELAY_INTERVAL);
 }
@@ -80,6 +87,14 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function onClickBtnReset() {
+  clearInterval(intervalId);
+  initOutputTextContent({});
+  refs.input.removeAttribute('disabled');
+  options.defaultDate = new Date();
+  flatpickr(refs.input, options);
 }
 
 function addLeadingZero(value) {
